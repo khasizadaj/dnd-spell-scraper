@@ -1,0 +1,2 @@
+# DND Spells Scraper
+
