@@ -320,4 +320,5 @@ if __name__ == "__main__":
         print(
             "Usage: python dnd_spell_scraper.py [path_to_spells.json]"
         )
+        sys.exit(1)
     main(sys.argv[1:])
