@@ -1,0 +1,5 @@
+all_spells.md
+scraped_spells/
+
+.venv
+__pycache__/
