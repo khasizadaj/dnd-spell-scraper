@@ -1,0 +1,38 @@
+{
+    "artificer": [
+        "faerie-fire",
+        "sanctuary",
+        "vortex-warp",
+        "protection-from-poison",
+        "enlarge-reduce",
+        "protection-from-energy",
+        "glyph-of-warding",
+        "intellect-fortress",
+        "haste",
+        "arcane-eye",
+        "mordenkainens-faithful-hound",
+        "mordenkainens-private-sanctum",
+        "otilukes-resilient-sphere"
+    ],
+    "druid": [
+        "resistance",
+        "thunderclap",
+        "mending",
+        "fire-bolt",
+        "magic-stone",
+        "ray-of-sickness",
+        "healing-word",
+        "charm-person",
+        "earth-tremor",
+        "entangle",
+        "healing-spirit",
+        "pass-without-trace",
+        "aura-of-vitality",
+        "sleet-storm",
+        "conjure-animals",
+        "call-lightning",
+        "stone-shape",
+        "elemental-bane",
+        "dominate-beast"
+    ]
+}

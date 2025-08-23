@@ -25,11 +25,14 @@ Example:
     >>> scraper.create_combined_file(spells)
 """
 
+import json
+from pathlib import Path
+import sys
 import requests
 from bs4 import BeautifulSoup
 import time
 import os
-from typing import List, Dict, Optional
+from typing import Iterable, List, Dict, Optional
 import re
 
 SPELL_SCHOOLS = [
@@ -205,7 +208,7 @@ class DnDSpellScraper:
         return f"{line}\n\n"
 
     def scrape_spells(
-        self, spell_names: List[str], output_dir: str = "scraped_spells"
+        self, spell_names: Iterable[str], output_dir: str = "scraped_spells"
     ) -> List[Dict[str, str]]:
         """
         Scrape multiple spells and save them as individual Markdown files.
@@ -271,50 +274,51 @@ class DnDSpellScraper:
         print(f"Combined file saved: {output_path}")
 
 
-def main():
+def flatten_spells_list(data: dict[str, list[str]]) -> set[str]:
+    spells = set()
+    for spell_names in data.values():
+        spells.update(spell_names)
+    return spells
+
+
+def main(args: list[str]):
     """
     Example usage of the DnDSpellScraper.
     """
+    path_to_spells = Path(args[0])
+
     # Example spell list
-    spell_names = [
-        "resistance",
-        "thunderclap",
-        "mending",
-        "fire-bolt",
-        "magic-stone",
-        "ray-of-sickness",
-        "healing-word",
-        "entangle",
-        "faerie-fire",
-        "earth-tremor",
-        "charm-person",
-        "pass-without-trace",
-        "enlarge-reduce",
-        "healing-spirit",
-        "conjure-animals",
-        "call-lightning",
-        "divination",
-        "blight"
-    ]
+    with open(path_to_spells, "r", encoding="utf-8") as f:
+        raw_spells: dict = json.loads(f.read())
+        flattened_spells: set[str] = flatten_spells_list(raw_spells)
 
     # Initialize scraper with 1.5 second delay between requests
     scraper = DnDSpellScraper(delay=1.5)
 
     print("Starting spell scraping...")
-    print(f"Scraping {len(spell_names)} spells...")
+    print("---------------------------------")
+    print(f"Scraping {len(flattened_spells)} spells...")
+    for class_name, spells in raw_spells.items():
+        print(f"         ↳ {len(spells)} spell(s) ⇨ {class_name} class")
+    print("---------------------------------")
 
     # Scrape spells and save individual files
-    scraped_spells = scraper.scrape_spells(spell_names)
+    scraped_spells = scraper.scrape_spells(flattened_spells)
 
     # Create combined file
     if scraped_spells:
         scraper.create_combined_file(scraped_spells)
         print(
-            f"\nSuccessfully scraped {len(scraped_spells)} out of {len(spell_names)} spells"
+            f"\nSuccessfully scraped {len(scraped_spells)} out of {len(flattened_spells)} spells"
         )
     else:
         print("No spells were successfully scraped")
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) == 1 or len(sys.argv) > 2:
+        print(
+            "Usage: python dnd_spell_scraper.py [path_to_spells.json]"
+        )
+        sys.exit(1)
+    main(sys.argv[1:])
